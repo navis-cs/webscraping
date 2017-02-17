@@ -1,0 +1,42 @@
+from urllib.request import urlopen
+from urllib.error import HTTPError
+from urllib.error import URLError
+from bs4 import BeautifulSoup
+
+def getTitle(url):
+	try:
+		html = urlopen(url)
+	except HTTPError as http_err:
+		print(http_err)
+		#{TODO} in case this errors: return null for now, break, or do some other "Plan B" 
+		return None
+	except URLError as url_err:
+		print("The server at " +url+ " could not be found.")
+	try:
+		bsObj = BeautifulSoup(html.read(), "html.parser")
+		print(bsObj)
+		#prints to whole thing 	
+		#{TODO} should probably go into a file.
+		#then you can dissect what you really want from that Request
+		#if not using browser tools to have an idea already
+		title = bsObj.body.h1
+	except AttributeError as attr_err:
+		print(attr_err)
+		#{TODO} in case this errors: return null for now, break, or do some other "Plan B" 
+		return None
+	return title
+
+title = getTitle("http://www.pythonscraping.com/exercises/exercise1.html")
+
+if title == None:
+	print("Title (h1) could not be found")
+else:
+	print (title)
+
+
+
+
+#https://www.knmi.nl/nederland-nu/luchtvaart/weerbulletin-kleine-luchtvaart
+#print(bsObj.pre) gives the Bulletin text 
+#{TODO} but the resulting text still has the tags and needs more clean up
+
